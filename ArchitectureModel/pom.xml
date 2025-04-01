@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.3</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>br.edu.architecture</groupId>
+	<artifactId>architecture-springboot</artifactId>
+	<version>r1.0</version>
+	<name>SpringBoot-Architecture</name>
+	<description>Trying to learn how to do spring</description>
+	<packaging>pom</packaging>
+	<modules>
+		<module>br.edu.cqrs</module> <!-- 1 -->
+		<module>br.edu.eventdriven</module> <!-- 2 -->
+		<module>br.edu.hexagonal</module> <!-- 3 -->
+		<module>br.edu.layered</module> <!-- 4 -->
+		<module>br.edu.microsservice</module> <!-- 5 -->
+		<module>br.edu.monolithic</module> <!-- 6 -->
+		<module>br.edu.reactive</module> <!-- 7 -->
+		<module>br.edu.serverless</module> <!-- 8 -->
+	</modules>
+	
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
