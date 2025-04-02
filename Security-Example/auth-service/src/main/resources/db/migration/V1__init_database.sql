@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS (
+
+
+
+
+
+
+
+);
+
+
+CREATE UNIQUE INDEX IF NOT EXISTS index_url ON ("");
