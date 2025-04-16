@@ -1,4 +1,4 @@
-package com.tom.sample.auth.model.model;
+package com.tom.sample.auth.model;
 
 import java.time.LocalDateTime;
 

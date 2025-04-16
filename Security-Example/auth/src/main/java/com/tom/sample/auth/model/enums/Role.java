@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role {
 
-
 	ANONYMOUS(Collections.emptySet()),
 	USER(Set.of(
 			USER_READ,

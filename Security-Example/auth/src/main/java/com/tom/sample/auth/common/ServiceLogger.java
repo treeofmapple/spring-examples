@@ -1,4 +1,4 @@
-package com.tom.sample.auth.config;
+package com.tom.sample.auth.common;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,16 +18,32 @@ public class ServiceLogger {
         log.info("[{}] -> {}", getCallerClassName(), message);
     }
 
+    public static void info(String message, Object... args) {
+        log.error("[{}] -> " + message, getCallerClassName(), args);
+    }
+    
     public static void warn(String message) {
         log.warn("[{}] -> {}", getCallerClassName(), message);
     }
 
+    public static void warn(String message, Object... args) {
+        log.error("[{}] -> " + message, getCallerClassName(), args);
+    }
+    
     public static void error(String message) {
         log.error("[{}] -> {}", getCallerClassName(), message);
+    }
+    
+    public static void error(String message, Object... args) {
+        log.error("[{}] -> " + message, getCallerClassName(), args);
     }
 
     public static void debug(String message) {
         log.debug("[{}] -> {}", getCallerClassName(), message);
+    }
+    
+    public static void debug(String message, Object... args) {
+        log.error("[{}] -> " + message, getCallerClassName(), args);
     }
 	
 }

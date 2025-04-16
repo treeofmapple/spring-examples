@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.github.bucket4j.Bandwidth;
@@ -34,9 +35,9 @@ public class RateLimitFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+    								@NonNull HttpServletResponse response,
+									@NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
         String ip = request.getRemoteAddr();
@@ -50,4 +51,5 @@ public class RateLimitFilter extends OncePerRequestFilter {
             response.getWriter().write("Too many requests - try again later.");
         }
     }
+    
 }

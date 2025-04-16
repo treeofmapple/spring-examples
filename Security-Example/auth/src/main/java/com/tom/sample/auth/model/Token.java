@@ -1,4 +1,4 @@
-package com.tom.sample.auth.model.model;
+package com.tom.sample.auth.model;
 
 import com.tom.sample.auth.model.enums.TokenType;
 

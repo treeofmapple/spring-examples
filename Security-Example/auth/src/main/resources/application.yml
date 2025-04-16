@@ -1,11 +1,11 @@
 spring:
   profiles:
-    active: console, database
+    active: console, database, service
   application:
     name: auth
 
 server:
   port: ${SERVER_PORT:8000}
-  # address: ${SERVER_ADDRESS:localhost}
+  address: ${SERVER_ADDRESS:localhost}
   servlet:
     context-path: /api

@@ -1,4 +1,4 @@
-package com.tom.sample.auth.model.model;
+package com.tom.sample.auth.model;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,6 +53,10 @@ public class User extends Auditable implements UserDetails {
 	
 	@OneToMany(mappedBy = "user")
 	private List<Token> tokens;
+	
+	public String getIdentifier() {
+	    return (email != null && !email.isEmpty()) ? email : username;
+	}
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
