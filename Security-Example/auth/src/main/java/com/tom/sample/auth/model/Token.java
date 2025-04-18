@@ -34,7 +34,7 @@ public class Token extends Auditable{
 	private String token;
 
 	@Enumerated(EnumType.STRING)
-	private TokenType tokenType;
+	private TokenType tokenType = TokenType.BEARER;
 
 	@Column(name = "revoked", updatable = true)
 	private boolean revoked;

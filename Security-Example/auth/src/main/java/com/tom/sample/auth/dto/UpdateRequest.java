@@ -1,11 +1,10 @@
 package com.tom.sample.auth.dto;
 
-public record RegisterRequest(
-		
-		String name,
+public record UpdateRequest(
 		
 		
 		String username,
+		
 		
 		
 		String email,
@@ -15,9 +14,11 @@ public record RegisterRequest(
 		
 		
 		String password,
+
 		
 		
 		String confirmPassword
 		
 ) {
+
 }

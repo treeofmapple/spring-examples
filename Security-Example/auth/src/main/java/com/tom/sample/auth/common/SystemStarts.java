@@ -3,6 +3,7 @@ package com.tom.sample.auth.common;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import com.tom.sample.auth.model.enums.Role;
 import com.tom.sample.auth.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -11,29 +12,41 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SystemStarts implements CommandLineRunner {
 
-	private static int QUANTITY = 30;
-	
 	private final GenerateData data;
 	private final UserRepository repository;
 	
     @Override
     public void run(String... args) throws Exception {
     	repository.deleteAll();
-		for(int i = 0; i <= QUANTITY; i++) {
-			var gen = data.datagen();
-			repository.save(gen);
-		}
+			roleUser(25);
+			roleManager(5);
+			roleAdmin(1);
+		ServiceLogger.info("Users debug created");
 	}
     
-    private void roleUser() {
-    	
+    private void roleUser(int quantity) {
+    	for(int i = 0; i <= quantity; i++) {
+	    	var gen = data.datagen();
+	    	gen.setRole(Role.USER);
+	    	repository.save(gen);
+    	}
     }
 	
-    private void roleManager() {
-    	
+    private void roleManager(int quantity) {
+    	for(int i = 0; i <= quantity; i++) {
+	    	var gen = data.datagen();
+	    	gen.setRole(Role.MANAGER);
+	    	repository.save(gen);
+    	}
     }
     
+    private void roleAdmin(int quantity) {
+    	for(int i = 0; i <= quantity; i++) {
+	    	var gen = data.datagen();
+	    	gen.setRole(Role.ADMIN);
+	    	repository.save(gen);
+    	}
+    }
 }
 
 
-// set the roles as user

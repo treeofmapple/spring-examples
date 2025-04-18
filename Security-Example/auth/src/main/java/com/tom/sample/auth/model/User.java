@@ -38,13 +38,16 @@ public class User extends Auditable implements UserDetails {
 
 	@Column(name = "name", unique = false, updatable = true, nullable = true)
 	private String name;
-
+	
 	@Column(name = "username", unique = true, updatable = true, nullable = false)
 	private String username;
 
 	@Column(name = "email", unique = false, updatable = true, nullable = true)
 	private String email;
 
+	@Column(name = "age", unique = false, updatable = true, nullable = true)
+	private int age;
+	
 	@Column(name = "password", unique = false, updatable = true, nullable = false)
 	private String password;
 

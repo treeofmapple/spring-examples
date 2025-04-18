@@ -1,5 +1,7 @@
 package com.tom.sample.auth.config;
 
+import java.util.UUID;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -39,7 +41,7 @@ public class ApplicationConfig {
 	}
 	
 	@Bean
-	AuditorAware<Integer> auditorAware() {
+	AuditorAware<UUID> auditorAware() {
 		return new ApplicationAuditAware();
 	}
 	
@@ -50,7 +52,14 @@ public class ApplicationConfig {
 	
 	@Bean
 	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		
+		return new BCryptPasswordEncoder(16);
+		
+		/*
+		return new Argon2PasswordEncoder(
+				16, 32, 2, 65536, 4
+		);
+		*/
 	}
 	
 }

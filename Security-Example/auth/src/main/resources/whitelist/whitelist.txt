@@ -1,0 +1,3 @@
+/actuator/health
+/actuator/info
+OPTIONS /**

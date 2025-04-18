@@ -1,56 +1,61 @@
 package com.tom.sample.auth.common;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.tom.sample.auth.model.User;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class GenerateData implements DatagenUtil {
 
+	private final PasswordEncoder passwordEncoder;
+	
 	protected User datagen() {
 		User user = new User();
 		
-		/*
+		user.setName(generateUniqueName());
 		
-        String uniqueName = generateUniqueProductName();
-        pro.setName(uniqueName);
-
-		pro.setQuantity(getRandomInt(10, 1000));
-
-		pro.setPrice(BigDecimal.valueOf(getRandomDouble(10, 120)));
+		user.setUsername(faker.internet().username());
 		
-		pro.setManufacturer(faker.company().name());
-
-		// 90 % chance
-		boolean isActive = getRandomNumber(100) < 90;
-		pro.setActive(isActive);
-
-		 */
-
+		user.setEmail(faker.internet().emailAddress());
+		
+		user.setAge(getRandomInt(isAtributesMet(60) ? 19 : 41, isAtributesMet(20) ? 41 : 59));
+		
+		user.setPassword(passwordEncoder.encode(faker.internet().password()));
+		
 		return user;
 	}
 	
     private String generateUniqueName() {
         String name;
         do {
-            name = faker.commerce().productName();
+            name = faker.name().fullName();
         } while (generatedNames.contains(name));
 
         generatedNames.add(name);
         return name;
     }
 	
-	protected double getRandomDouble(int min, int max) {
+	protected double getRandomDouble(double min, double max) {
+	    if (max <= min) {
+	        return min;
+	    }
 		return loc.nextDouble(min, max);
 	}
 
 	protected int getRandomInt(int min, int max) {
+	    if (max <= min) {
+	        return min;
+	    }
 		return loc.nextInt(min, max);
 	}
 
-	protected int getRandomNumber(int value) {
-		return loc.nextInt(value);
-	}
+	protected boolean isAtributesMet(int atribute) {
+		return loc.nextInt(100) < atribute;
+	} 
 }
 
 

@@ -23,8 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-	private static final String[] WHITE_LIST_URL = {""};
-	
+	private final WhitelistLoader whitelistLoader;	
 	private final AuthEntryPointJwt unauthorizedHandler;
 	private final JwtAuthenticationFilter filter;
 	private final AuthenticationProvider provider;
@@ -32,6 +31,7 @@ public class WebSecurityConfig {
 	
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    	String[] whiteListUrls = whitelistLoader.loadWhitelist();
     	http
     		.csrf(csrf -> csrf.disable())
     		.cors(cors -> cors.configure(http))
@@ -43,7 +43,7 @@ public class WebSecurityConfig {
     				.expiredUrl("/login?expired")
     				.maxSessionsPreventsLogin(true))
     		.authorizeHttpRequests(auth -> auth
-    				.requestMatchers(WHITE_LIST_URL).permitAll()
+    				.requestMatchers(whiteListUrls).permitAll()
     				.requestMatchers("").hasAnyRole()
     				.requestMatchers("").hasAnyRole()
     				.requestMatchers("").hasAnyRole()

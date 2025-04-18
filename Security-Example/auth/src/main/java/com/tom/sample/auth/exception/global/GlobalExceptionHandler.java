@@ -34,12 +34,17 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(exp.getMessage(), HttpStatus.CONFLICT, request, null);
     }
     
-    @ExceptionHandler(InvalidDateException.class)
+    @ExceptionHandler({ InvalidDateException.class })
     public ResponseEntity<ErrorResponse> handleDateException(NumberFormatException exp, HttpServletRequest request) {
         return buildErrorResponse(exp.getMessage(), HttpStatus.EXPECTATION_FAILED, request, null);
     }
+    
+    @ExceptionHandler({ IllegalStateException.class })
+    public ResponseEntity<ErrorResponse> handleIllegalException(IllegalStateException exp, HttpServletRequest request) {
+        return buildErrorResponse(exp.getMessage(), HttpStatus.BAD_REQUEST, request, null);
+    }
 
-    @ExceptionHandler(InternalException.class)
+    @ExceptionHandler({ InternalException.class })
     public ResponseEntity<ErrorResponse> handleInternalException(InternalException exp, HttpServletRequest request) {
         return buildErrorResponse(exp.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request, null);
     }
