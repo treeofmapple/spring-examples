@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("v1/admin")
+@RequestMapping("v1/manager")
 @PreAuthorize("hasRole('MANAGER')")
 // @Tag(name = "Anonymous") # Swagger
 @RequiredArgsConstructor
