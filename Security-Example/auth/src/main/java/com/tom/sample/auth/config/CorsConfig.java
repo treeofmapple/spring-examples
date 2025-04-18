@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
-	@Value("application.cors.time:300")
+	@Value("${application.cors.time:300}")
 	private Long corsTime;
 	
     @Bean

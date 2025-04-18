@@ -25,5 +25,7 @@ public class AdminService {
 	// edit password of one user
 	
 	// edit admin password
+
+	// Change user role
 	
 }

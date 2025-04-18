@@ -6,9 +6,11 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.tom.sample.auth.model.Token;
 
+@Repository
 public interface TokenRepository extends JpaRepository<Token, Long> {
 
 	@Query(value = """
@@ -26,14 +28,5 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 	Optional<Token> findLatestTokenByUserId(UUID id);
 	
 	Optional<Token> findByToken(String token);
-	
-	
-	// find most recent user
-	
-	// find by name or username
-	
-	// exists by name or username
-	
-	// remove by username
 	
 }

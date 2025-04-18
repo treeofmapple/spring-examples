@@ -44,11 +44,8 @@ public class WebSecurityConfig {
     				.maxSessionsPreventsLogin(true))
     		.authorizeHttpRequests(auth -> auth
     				.requestMatchers(whiteListUrls).permitAll()
-    				.requestMatchers("").hasAnyRole()
-    				.requestMatchers("").hasAnyRole()
-    				.requestMatchers("").hasAnyRole()
-    				.requestMatchers("").hasAnyRole()
-    				.requestMatchers("").hasAnyRole()
+    				//.requestMatchers("").hasAnyRole()
+    				//.requestMatchers("").hasAnyRole()
     				.anyRequest()
     				.authenticated()
     		)

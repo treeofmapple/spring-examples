@@ -42,6 +42,11 @@ public class UserService {
 	private final UserRepository repository;
 	private final EntityUpdater updater;
 
+	public UserResponse getCurrentUser(Principal connectedUser) {
+		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+		return mapper.buildUserResponse(user);
+	}
+	
 	// get user by name or email
 	public List<UserResponse> findUser(String userInfo, Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
@@ -97,7 +102,7 @@ public class UserService {
 	public void changePassword(String userInfo, PasswordRequest request) {
 		var user = repository.findByUsername(userInfo)
 				.or(() -> repository.findByEmail(userInfo))
-				.orElseThrow(() -> new NotFoundException(""));
+				.orElseThrow(() -> new NotFoundException("User not found"));
 
 		if (!passwordEncoder.matches(request.confirmationPassword(), user.getPassword())) {
 			throw new IllegalStatusException("Wrong Password");
@@ -114,7 +119,7 @@ public class UserService {
 
 	@Transactional
 	public AuthenticationResponse register(RegisterRequest request) {
-		var user = mapper.buildAtributes(request.name(), request.username(), request.age(), request.email(),
+		var user = mapper.buildAttributes(request.name(), request.username(), request.age(), request.email(),
 				passwordEncoder.encode(request.password()));
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);
@@ -128,13 +133,13 @@ public class UserService {
 
 	// either or username or email
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {
-		String userIdentifier = request.username() != null ? request.username() : request.email();
+		String userIdentifier = request.userInfo();
 		
 		authManager.authenticate(
 				new UsernamePasswordAuthenticationToken(userIdentifier, request.password()));
 
-		var user = repository.findByUsername(request.username())
-				.or(() -> repository.findByEmail(request.email()))
+		var user = repository.findByUsername(userIdentifier)
+				.or(() -> repository.findByEmail(userIdentifier))
 				.orElseThrow(() -> new NotFoundException("Username or email wasn't found"));
 		
 		var jwtToken = jwtService.generateToken(user);
@@ -150,8 +155,8 @@ public class UserService {
 		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 		final String refreshToken;
 		final String userInfo;
-		if (authHeader == null || authHeader.startsWith("Bearer ")) {
-			return;
+		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+			throw new NotFoundException("Auth token was not found");
 		}
 		refreshToken = authHeader.substring(7);
 		userInfo = jwtService.extractUsername(refreshToken);

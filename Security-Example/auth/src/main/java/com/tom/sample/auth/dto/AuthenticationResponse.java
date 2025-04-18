@@ -8,5 +8,3 @@ public record AuthenticationResponse(
 		
 ) {
 }
-
-// Fix Validations

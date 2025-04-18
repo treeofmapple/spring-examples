@@ -26,7 +26,7 @@ public class EntityUpdater {
 	}
 	
 	public void saveUserToken(User user, String jwtToken) {
-		var token = mapper.buildAtributes(user, jwtToken, TokenType.BEARER, false, false);
+		var token = mapper.buildAttributes(user, jwtToken, TokenType.BEARER, false, false);
 		tokenRepository.save(token);
 	}
 

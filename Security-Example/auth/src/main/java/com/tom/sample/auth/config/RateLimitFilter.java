@@ -23,7 +23,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
 
     @Bean
-    private Bucket createNewBucket() {
+    Bucket createNewBucket() {
     	Bandwidth limit = Bandwidth.builder()
     			.capacity(10)
     			.refillIntervally(10, Duration.ofMinutes(1))

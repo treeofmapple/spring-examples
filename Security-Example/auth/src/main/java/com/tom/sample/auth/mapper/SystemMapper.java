@@ -24,11 +24,7 @@ public interface SystemMapper {
 	@Mapping(source = "age", target = "age")
 	@Mapping(source = "email", target = "email")
 	@Mapping(source = "password", target = "password")
-	User buildAtributes(String name, String username, int age, String email, String password);
-	
-	@Mapping(source = "jwtToken", target = "accessToken")
-	@Mapping(source = "refreshToken", target = "refreshToken")
-	AuthenticationResponse buildResponse(String jwtToken, String refreshToken);
+	User buildAttributes(String name, String username, int age, String email, String password);
 	
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "user", target = "user")
@@ -36,10 +32,15 @@ public interface SystemMapper {
 	@Mapping(source = "tokenType", target = "tokenType")
 	@Mapping(source = "revoked", target = "revoked")
 	@Mapping(source = "expired", target = "expired")
-	Token buildAtributes(User user, String token, TokenType tokenType, boolean revoked, boolean expired);
+	Token buildAttributes(User user, String token, TokenType tokenType, boolean revoked, boolean expired);
 	
+	@Mapping(source = "name", target = "name")
 	@Mapping(source = "username", target = "username")
 	@Mapping(source = "email", target = "email")
 	UserResponse buildUserResponse(User user);
+	
+	@Mapping(source = "jwtToken", target = "accessToken")
+	@Mapping(source = "refreshToken", target = "refreshToken")
+	AuthenticationResponse buildResponse(String jwtToken, String refreshToken);
 	
 }

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.tom.sample.auth.common.ParseTime;
 import com.tom.sample.auth.exception.InternalException;
 import com.tom.sample.auth.model.User;
 
@@ -25,25 +26,27 @@ import io.jsonwebtoken.Jwts;
 @Service
 public class JwtService {
 
+	private ParseTime time;
+	
 	@Value("application.security.secret-key")
 	private String secretKey;
 	
 	@Value("application.security.expiration")
-	private long jwtExpiration;
+	private String jwtExpiration;
 	
 	@Value("application.security.refresh-token.expiration")
-	private long refreshExpiration;
+	private String refreshExpiration;
 
 	public String generateToken(UserDetails userDetails) {
 		return generateToken(new HashMap<>(), userDetails);
 	}
 	
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails ) {
-		return buildToken(extraClaims, userDetails, jwtExpiration);
+		return buildToken(extraClaims, userDetails, time.parseDuration(jwtExpiration));
 	}
 	
 	public String generateRefreshToken(UserDetails userDetails) {
-		return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+		return buildToken(new HashMap<>(), userDetails, time.parseDuration(refreshExpiration));
 	}
 	
 	public boolean isTokenValid(String token, UserDetails userDetails){
