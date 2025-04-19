@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminService {
 
+	// details the logs
+	
 	// remove user
 	
 	// get all users

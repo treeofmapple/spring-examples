@@ -16,5 +16,3 @@ public record PasswordRequest(
 	    String confirmationPassword
 ) {
 }
-
-//Fix Validations

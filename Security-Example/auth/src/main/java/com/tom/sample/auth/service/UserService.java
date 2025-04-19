@@ -19,6 +19,7 @@ import com.tom.sample.auth.dto.PasswordRequest;
 import com.tom.sample.auth.dto.RegisterRequest;
 import com.tom.sample.auth.dto.UpdateRequest;
 import com.tom.sample.auth.dto.UserResponse;
+import com.tom.sample.auth.exception.AlreadyExistsException;
 import com.tom.sample.auth.exception.IllegalStatusException;
 import com.tom.sample.auth.exception.NotFoundException;
 import com.tom.sample.auth.mapper.SystemMapper;
@@ -35,6 +36,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 
+	// details the logs
+	
 	private final JwtService jwtService;
 	private final SystemMapper mapper;
 	private final AuthenticationManager authManager;
@@ -119,6 +122,10 @@ public class UserService {
 
 	@Transactional
 	public AuthenticationResponse register(RegisterRequest request) {
+		if(repository.existsByUsername(request.username()) || repository.existsByEmail(request.email())) {
+			throw new AlreadyExistsException("User already exists");
+		}
+		
 		var user = mapper.buildAttributes(request.name(), request.username(), request.age(), request.email(),
 				passwordEncoder.encode(request.password()));
 		var savedUser = repository.save(user);

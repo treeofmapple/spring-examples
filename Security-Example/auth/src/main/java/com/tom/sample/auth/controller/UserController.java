@@ -1,6 +1,5 @@
 package com.tom.sample.auth.controller;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -19,8 +18,6 @@ import com.tom.sample.auth.dto.UpdateRequest;
 import com.tom.sample.auth.dto.UserResponse;
 import com.tom.sample.auth.service.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("v1/user")
@@ -36,14 +33,6 @@ public class UserController {
     public UserResponse getCurrentUser(Principal principal) {
         return service.getCurrentUser(principal);
     }
-	
-	// refresh token
-	@PostMapping("/refresh-token")
-    @PreAuthorize("hasAuthority('user:create')")
-	public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		service.refreshToken(request, response);
-		return ResponseEntity.status(HttpStatus.OK).body("Token from user refreshed");
-	}
 	
 	@PostMapping("/edit-connected")
 	@PreAuthorize("hasAuthority('user:create')")
