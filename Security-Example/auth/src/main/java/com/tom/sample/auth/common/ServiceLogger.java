@@ -19,7 +19,7 @@ public class ServiceLogger {
     }
 
     public static void info(String message, Object... args) {
-        log.error("[{}] -> " + message, getCallerClassName(), args);
+        log.info("[{}] -> " + message, getCallerClassName(), args);
     }
     
     public static void warn(String message) {
@@ -27,7 +27,7 @@ public class ServiceLogger {
     }
 
     public static void warn(String message, Object... args) {
-        log.error("[{}] -> " + message, getCallerClassName(), args);
+        log.warn("[{}] -> " + message, getCallerClassName(), args);
     }
     
     public static void error(String message) {
@@ -43,7 +43,7 @@ public class ServiceLogger {
     }
     
     public static void debug(String message, Object... args) {
-        log.error("[{}] -> " + message, getCallerClassName(), args);
+        log.debug("[{}] -> " + message, getCallerClassName(), args);
     }
 	
 }
