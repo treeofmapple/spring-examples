@@ -1,12 +1,6 @@
 package com.tom.sample.auth.security;
 
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Base64;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,24 +11,28 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.tom.sample.auth.common.ParseTime;
-import com.tom.sample.auth.exception.InternalException;
 import com.tom.sample.auth.model.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
-	private ParseTime time;
-	
-	@Value("application.security.secret-key")
-	private String secretKey;
-	
-	@Value("application.security.expiration")
+	private final ParseTime time;
+
+    @Value("${application.security.secret-key}")
+    private String secretKey;
+
+	@Value("${application.security.expiration}")
 	private String jwtExpiration;
-	
-	@Value("application.security.refresh-token.expiration")
+
+	@Value("${application.security.refresh-token.expiration}")
 	private String refreshExpiration;
 
 	public String generateToken(UserDetails userDetails) {
@@ -78,47 +76,27 @@ public class JwtService {
 	    return userDetails.getUsername();
 	}
 	
-    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
-        long now = System.currentTimeMillis();
-        return Jwts
-                .builder()
-                .claims(extraClaims)
-                .subject(getIdentifier(userDetails))
-                .issuedAt(new Date(now))
-                .expiration(new Date(now + expiration))
-                .signWith(getPrivateKey(), Jwts.SIG.ES256)
-                .compact();
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getPublicKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
+	private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+		return Jwts.builder()
+				.setClaims(extraClaims)
+				.setSubject(userDetails.getUsername())
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + expiration))
+				.signWith(getSignInKey(), SignatureAlgorithm.HS256)
+				.compact();
+	}
 	
-    private PrivateKey getPrivateKey() {
-        try {
-            byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-            KeyFactory keyFactory = KeyFactory.getInstance("EC");
-            return keyFactory.generatePrivate(spec);
-        } catch (Exception e) {
-            throw new InternalException("Invalid EC private key", e);
-        }
-    }
+	private Claims extractAllClaims(String token) {
+		return Jwts.parserBuilder()
+				.setSigningKey(getSignInKey())
+				.build()
+				.parseClaimsJws(token)
+				.getBody();
+	}
 
-    private PublicKey getPublicKey() {
-        try {
-            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("EC");
-            keyPairGen.initialize(256);
-            KeyPair pair = keyPairGen.generateKeyPair();
-            return pair.getPublic();
-        } catch (Exception e) {
-            throw new InternalException("Unable to load EC public key", e);
-        }
-    }	
+	private Key getSignInKey() {
+		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+		return Keys.hmacShaKeyFor(keyBytes);
+	}
 	
 }

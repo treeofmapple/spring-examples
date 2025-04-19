@@ -9,6 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
+    @Value("${application.cors.allowed-origins}")
+    private String[] allowedOrigins;
+	
 	@Value("${application.cors.time:300}")
 	private Long corsTime;
 	
@@ -18,11 +21,11 @@ public class CorsConfig implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*") // http://localhost:3000
+                        .allowedOrigins(allowedOrigins) // http://localhost:3000
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*") // List.of("Authorization", "Content-Type", "X-Requested-With")
                         .exposedHeaders("*") // List.of("Authorization")
-                        .allowCredentials(true)
+                        // .allowCredentials(true)
                         .maxAge(corsTime);
             }
         };

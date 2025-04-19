@@ -2,6 +2,9 @@ package com.tom.sample.auth.common;
 
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ParseTime {
 
 	public long parseDuration(String duration) {

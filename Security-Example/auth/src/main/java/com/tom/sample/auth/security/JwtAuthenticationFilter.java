@@ -40,24 +40,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 		
 		final String authHeader = request.getHeader("Authorization");
-		final String jwt;
-		final String identifier;
 		if(authHeader == null || !authHeader.startsWith("Bearer ")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		jwt = authHeader.substring(7);
-		identifier = jwtService.extractUsername(jwt);
-		if(identifier != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = this.userDetailsService.loadUserByUsername(identifier);
-			var isTokenValid = tokenRepository.findByToken(jwt).map(t -> !t.isExpired() && !t.isRevoked()).orElseThrow(() -> new InternalException("Token Not Found")); 
-			if(jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
-				UsernamePasswordAuthenticationToken authToken = 
-						new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				SecurityContextHolder.getContext().setAuthentication(authToken);
-			}
-		}
+		
+		final String jwt = authHeader.substring(7);
+		final String identifier = jwtService.extractUsername(jwt);
+		
+	    if (identifier == null) {
+	        filterChain.doFilter(request, response);
+	        return;
+	    }
+		
+		UserDetails userDetails = userDetailsService.loadUserByUsername(identifier);
+	    boolean isTokenValid = tokenRepository.findByToken(jwt)
+	            .map(token -> !token.isExpired() && !token.isRevoked())
+	            .orElseThrow(() -> new InternalException("Token not found or revoked."));
+		
+	    if (!jwtService.isTokenValid(jwt, userDetails) || !isTokenValid) {
+	        throw new InternalException("Invalid or expired JWT token.");
+	    }
+
+	    UsernamePasswordAuthenticationToken authToken = 
+	            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+	    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+	    SecurityContextHolder.getContext().setAuthentication(authToken);
 		filterChain.doFilter(request, response);
 	}
 	

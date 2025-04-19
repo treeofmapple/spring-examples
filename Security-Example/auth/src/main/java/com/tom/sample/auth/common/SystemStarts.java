@@ -1,6 +1,7 @@
 package com.tom.sample.auth.common;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.tom.sample.auth.model.enums.Role;
@@ -9,6 +10,7 @@ import com.tom.sample.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Component
+@Profile("debug")
 @RequiredArgsConstructor
 public class SystemStarts implements CommandLineRunner {
 
@@ -21,7 +23,7 @@ public class SystemStarts implements CommandLineRunner {
 			roleUser(25);
 			roleManager(5);
 			roleAdmin(1);
-		ServiceLogger.info("Users debug created");
+		ServiceLogger.info("Users for debug created");
 	}
     
     private void roleUser(int quantity) {

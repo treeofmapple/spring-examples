@@ -1,5 +1,7 @@
 package com.tom.sample.auth.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -34,7 +36,7 @@ public class WebSecurityConfig {
     	String[] whiteListUrls = whitelistLoader.loadWhitelist();
     	http
     		.csrf(csrf -> csrf.disable())
-    		.cors(cors -> cors.configure(http))
+    		.cors(withDefaults())
     		.exceptionHandling(exception -> 
     				exception.authenticationEntryPoint(unauthorizedHandler))
     		.sessionManagement(session ->

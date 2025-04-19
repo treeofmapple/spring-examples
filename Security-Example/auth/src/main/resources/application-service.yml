@@ -1,8 +1,9 @@
 application:
   cors:
     time: 300
+    allowed-origins: "*"
   security:
-    security-key: ${SECURITY_KEY}
+    secret-key: ${SECURITY_KEY}
     expiration: ${EXPIRATION_KEY}
     refresh-token:
       expiration: ${REFRESH_KEY}
