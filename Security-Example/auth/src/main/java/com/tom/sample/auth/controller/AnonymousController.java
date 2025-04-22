@@ -41,10 +41,15 @@ public class AnonymousController {
 	}
 	
 	// refresh token to custom user
-	
 	@PostMapping("/refresh-token")
 	public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		service.refreshToken(request, response);
+		return ResponseEntity.status(HttpStatus.OK).body("Token from user refreshed");
+	}
+
+	@PostMapping("/refresh")
+	public ResponseEntity<String> refreshToken(@RequestBody AuthenticationRequest request) throws IOException {
+		
 		return ResponseEntity.status(HttpStatus.OK).body("Token from user refreshed");
 	}
 }

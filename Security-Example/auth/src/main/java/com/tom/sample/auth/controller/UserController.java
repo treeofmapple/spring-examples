@@ -20,7 +20,7 @@ import com.tom.sample.auth.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("v1/user")
+@RequestMapping("/v1/user")
 @PreAuthorize("hasRole('USER')")
 // @Tag(name = "Anonymous") # Swagger
 @RequiredArgsConstructor

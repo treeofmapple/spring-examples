@@ -34,7 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 									@NonNull FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		if(request.getServletPath().contains("/api/v1/auth")) {
+		// Make this a way to be changeable
+		
+		if(request.getServletPath().contains("/v1/auth")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -65,6 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	    UsernamePasswordAuthenticationToken authToken = 
 	            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+	    
 	    SecurityContextHolder.getContext().setAuthentication(authToken);
 		filterChain.doFilter(request, response);
 	}

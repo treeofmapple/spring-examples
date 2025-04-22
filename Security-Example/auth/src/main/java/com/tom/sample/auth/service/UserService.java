@@ -180,5 +180,9 @@ public class UserService {
 			}
 		}
 	}
+	
+	public void refreshToken() {
+		// when authenticate user make it refresh the token?
+	}
 
 }

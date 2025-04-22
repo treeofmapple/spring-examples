@@ -25,7 +25,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 		       "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :input, '%'))")
 	List<User> findByUsernameOrEmailContainingIgnoreCase(@Param("input") String input);
 
-
 	boolean existsByUsername(String username);
 	boolean existsByEmail(String email);
 
