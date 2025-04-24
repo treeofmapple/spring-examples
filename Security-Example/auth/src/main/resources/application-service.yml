@@ -4,6 +4,6 @@ application:
     allowed-origins: "*"
   security:
     secret-key: ${SECURITY_KEY}
-    expiration: ${EXPIRATION_KEY}
+    expiration: ${EXPIRATION_KEY:1H}
     refresh-token:
-      expiration: ${REFRESH_KEY}
+      expiration: ${REFRESH_KEY:7D}

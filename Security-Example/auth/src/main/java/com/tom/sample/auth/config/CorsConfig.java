@@ -30,5 +30,4 @@ public class CorsConfig implements WebMvcConfigurer {
             }
         };
     }
-    
 }

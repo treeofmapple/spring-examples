@@ -1,33 +1,8 @@
 {"properties": [
   {
-    "name": "application.security.security-key",
-    "type": "java.lang.String",
-    "description": "A description for 'application.security.security-key'"
-  },
-  {
-    "name": "application.security.expiration",
-    "type": "java.lang.String",
-    "description": "A description for 'application.security.expiration'"
-  },
-  {
-    "name": "application.security.refresh-token.expiration",
-    "type": "java.lang.String",
-    "description": "A description for 'application.security.refresh-token.expiration'"
-  },
-  {
     "name": "application.cors.time",
     "type": "java.lang.String",
     "description": "A description for 'application.cors.time'"
-  },
-  {
-    "name": "application.whitelist",
-    "type": "java.lang.String",
-    "description": "A description for 'application.whitelist'"
-  },
-  {
-    "name": "application.cors.allowed-origins",
-    "type": "java.lang.String",
-    "description": "A description for 'application.cors.allowed-origins'"
   },
   {
     "name": "application.security.secret-key",
@@ -35,8 +10,18 @@
     "description": "A description for 'application.security.secret-key'"
   },
   {
-    "name": "application.security.public-key",
+    "name": "application.cors.allowed-origins",
     "type": "java.lang.String",
-    "description": "A description for 'application.security.public-key'"
+    "description": "A description for 'application.cors.allowed-origins'"
+  },
+  {
+    "name": "application.security.refresh-token.expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'application.security.refresh-token.expiration'"
+  },
+	{
+    "name": "application.security.expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'application.security.expiration'"
   }
 ]}
