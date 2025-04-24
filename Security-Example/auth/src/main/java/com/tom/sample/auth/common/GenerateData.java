@@ -1,5 +1,8 @@
 package com.tom.sample.auth.common;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -11,22 +14,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GenerateData implements DatagenUtil {
 
+	private final Map<String, String> userPasswords = new LinkedHashMap<>();
 	private final PasswordEncoder passwordEncoder;
 	
 	protected User datagen() {
 		User user = new User();
-		
 		user.setName(generateUniqueName());
-		
 		user.setUsername(faker.internet().username());
-		
 		user.setEmail(faker.internet().emailAddress());
-		
 		user.setAge(getRandomInt(isAtributesMet(60) ? 19 : 41, isAtributesMet(20) ? 41 : 59));
-		
-		user.setPassword(passwordEncoder.encode(faker.internet().password()));
-		
+		String rawPassword = generatePasswordUnique();
+		user.setPassword(passwordEncoder.encode(rawPassword));
+		userPasswords.put(user.getUsername(), rawPassword);
 		return user;
+	}
+	
+
+	public Map<String, String> getUserPasswords() {
+		return userPasswords;
 	}
 	
     private String generateUniqueName() {
@@ -34,11 +39,19 @@ public class GenerateData implements DatagenUtil {
         do {
             name = faker.name().fullName();
         } while (generatedNames.contains(name));
-
         generatedNames.add(name);
         return name;
     }
-	
+
+    private String generatePasswordUnique() {
+    	String password;
+    	do {
+    		password = faker.internet().password();
+    	} while(passwords.contains(password));
+    	passwords.add(password);
+    	return password;
+    }
+    
 	protected double getRandomDouble(double min, double max) {
 	    if (max <= min) {
 	        return min;

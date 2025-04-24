@@ -1,7 +1,5 @@
 package com.tom.sample.auth.config;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,7 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfigurationSource;
 
+import com.tom.sample.auth.common.WhitelistLoader;
 import com.tom.sample.auth.exception.AuthEntryPointJwt;
 import com.tom.sample.auth.security.JwtAuthenticationFilter;
 
@@ -30,13 +30,19 @@ public class WebSecurityConfig {
 	private final JwtAuthenticationFilter filter;
 	private final AuthenticationProvider provider;
 	private final LogoutHandler logoutHandler;
+	private final CorsConfigurationSource corsConfigurationSource;
 	
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     	String[] whiteListUrls = whitelistLoader.loadWhitelist();
     	http
+    		.headers(headers -> headers
+			    .contentSecurityPolicy(csp -> csp.policyDirectives("script-src 'self'"))
+			    .frameOptions(frame -> frame.sameOrigin())
+			)
     		.csrf(csrf -> csrf.disable())
-    		.cors(withDefaults())
+    		.cors(cors -> cors.configurationSource(corsConfigurationSource))
+    		
     		.exceptionHandling(exception -> 
     				exception.authenticationEntryPoint(unauthorizedHandler))
     		.sessionManagement(session ->
@@ -47,9 +53,8 @@ public class WebSecurityConfig {
     		.authorizeHttpRequests(auth -> auth
     				.requestMatchers(whiteListUrls).permitAll()
     				//.requestMatchers("").hasAnyRole()
-    				//.requestMatchers("").hasAnyRole()
-    				.anyRequest()
-    				.authenticated()
+    				//.requestMatchers("").permitAll()
+    				.anyRequest().authenticated()
     		)
     		.authenticationProvider(provider)
     		.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

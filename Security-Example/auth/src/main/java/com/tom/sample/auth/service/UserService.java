@@ -24,6 +24,7 @@ import com.tom.sample.auth.exception.IllegalStatusException;
 import com.tom.sample.auth.exception.NotFoundException;
 import com.tom.sample.auth.mapper.SystemMapper;
 import com.tom.sample.auth.model.User;
+import com.tom.sample.auth.model.enums.Role;
 import com.tom.sample.auth.repository.UserRepository;
 import com.tom.sample.auth.security.JwtService;
 
@@ -86,38 +87,40 @@ public class UserService {
 	public void changePassword(PasswordRequest request, Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 		
-		if (!passwordEncoder.matches(request.confirmationPassword(), user.getPassword())) {
+		if (!passwordEncoder.matches(request.confirmationpassword(), user.getPassword())) {
 			ServiceLogger.warn("Wrong Password");
 			throw new IllegalStatusException("Wrong Password");
 		}
 
-		if (!request.newPassword().equals(request.confirmationPassword())) {
+		if (!request.newpassword().equals(request.confirmationpassword())) {
 			ServiceLogger.warn("Passwords are not the same");
 			throw new IllegalStatusException("Passwords are not the same");
 		}
 
-		user.setPassword(passwordEncoder.encode(request.newPassword()));
+		user.setPassword(passwordEncoder.encode(request.newpassword()));
 		repository.save(user);
 		ServiceLogger.info("User {} changed their password", user.getUsername());
 	}
 
-	// request user name
-	public void changePassword(String userInfo, PasswordRequest request) {
+	// Admin
+	public void changePassword(String userInfo, PasswordRequest request, Principal connectedUser) {
+		var admin = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+		
 		var user = repository.findByUsername(userInfo)
 				.or(() -> repository.findByEmail(userInfo))
 				.orElseThrow(() -> new NotFoundException("User not found"));
 
-		if (!passwordEncoder.matches(request.confirmationPassword(), user.getPassword())) {
+		if (!passwordEncoder.matches(request.confirmationpassword(), user.getPassword())) {
 			throw new IllegalStatusException("Wrong Password");
 		}
 
-		if (!request.newPassword().equals(request.confirmationPassword())) {
+		if (!request.newpassword().equals(request.confirmationpassword())) {
 			throw new IllegalStatusException("Passwords are not the same");
 		}
 
-		user.setPassword(passwordEncoder.encode(request.newPassword()));
+		user.setPassword(passwordEncoder.encode(request.newpassword()));
 		repository.save(user);
-		ServiceLogger.info("Password changed for user {}", userInfo);
+		ServiceLogger.info("Password changed for user {} by {}", userInfo, admin);
 	}
 
 	@Transactional
@@ -126,8 +129,12 @@ public class UserService {
 			throw new AlreadyExistsException("User already exists");
 		}
 		
-		var user = mapper.buildAttributes(request.name(), request.username(), request.age(), request.email(),
-				passwordEncoder.encode(request.password()));
+		if (request.password().equals(request.confirmpassword())) {
+			throw new IllegalStatusException("Passwords are not the same");
+		}
+		
+		var user = mapper.buildAttributes(request.name(), request.username(),request.age(), request.email(), passwordEncoder.encode(request.password()));
+		user.setRole(Role.USER);
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);
@@ -138,17 +145,16 @@ public class UserService {
 		return response;
 	}
 
-	// either or username or email
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {
-		String userIdentifier = request.userInfo();
+		String userIdentifier = request.userinfo();
 		
-		authManager.authenticate(
-				new UsernamePasswordAuthenticationToken(userIdentifier, request.password()));
-
 		var user = repository.findByUsername(userIdentifier)
 				.or(() -> repository.findByEmail(userIdentifier))
 				.orElseThrow(() -> new NotFoundException("Username or email wasn't found"));
 		
+		authManager.authenticate(
+				new UsernamePasswordAuthenticationToken(user.getUsername(), request.password()));
+
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);
 		updater.revokeAllUserTokens(user);
@@ -181,8 +187,4 @@ public class UserService {
 		}
 	}
 	
-	public void refreshToken() {
-		// when authenticate user make it refresh the token?
-	}
-
 }

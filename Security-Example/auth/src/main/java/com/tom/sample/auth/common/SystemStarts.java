@@ -24,6 +24,10 @@ public class SystemStarts implements CommandLineRunner {
 			roleManager(5);
 			roleAdmin(1);
 		ServiceLogger.info("Users for debug created");
+		
+		data.getUserPasswords().forEach((username, password) -> 
+			ServiceLogger.debug("DEBUG USER -> username: {}, password: {}", username, password)
+		);
 	}
     
     private void roleUser(int quantity) {

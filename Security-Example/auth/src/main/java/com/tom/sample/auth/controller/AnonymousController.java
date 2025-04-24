@@ -26,30 +26,22 @@ public class AnonymousController {
 
 	private final UserService service;
 	
-	// register
-	@PostMapping("/register")
+	@PostMapping("/sign-up")
 	public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody RegisterRequest request) {
 		var register = service.register(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(register);
 	}
 	
-	// authenticate
-	@PostMapping("/authenticate")
+	@PostMapping("/sign-in")
 	public ResponseEntity<AuthenticationResponse> authenticateUser(@RequestBody AuthenticationRequest request) {
 		var authenticate = service.authenticate(request);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(authenticate);
 	}
 	
-	// refresh token to custom user
 	@PostMapping("/refresh-token")
 	public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		service.refreshToken(request, response);
 		return ResponseEntity.status(HttpStatus.OK).body("Token from user refreshed");
 	}
 
-	@PostMapping("/refresh")
-	public ResponseEntity<String> refreshToken(@RequestBody AuthenticationRequest request) throws IOException {
-		
-		return ResponseEntity.status(HttpStatus.OK).body("Token from user refreshed");
-	}
 }

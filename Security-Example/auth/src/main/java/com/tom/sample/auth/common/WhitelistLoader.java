@@ -1,4 +1,4 @@
-package com.tom.sample.auth.config;
+package com.tom.sample.auth.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;

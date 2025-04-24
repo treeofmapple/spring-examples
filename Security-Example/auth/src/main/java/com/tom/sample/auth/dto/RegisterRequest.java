@@ -24,7 +24,7 @@ public record RegisterRequest(
 	    String password,
 
 	    @NotBlank(message = "Confirm password must not be blank")
-	    String confirmPassword
+	    String confirmpassword
 		
 ) {
 }

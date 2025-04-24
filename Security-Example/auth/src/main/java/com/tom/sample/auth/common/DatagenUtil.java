@@ -13,5 +13,6 @@ public interface DatagenUtil {
 	AtomicLong atomicCounter = new AtomicLong(0);
 	ThreadLocalRandom loc = ThreadLocalRandom.current();
 	Set<String> generatedNames = new HashSet<>();
-
+	Set<String> passwords = new HashSet<>();
+	
 }

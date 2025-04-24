@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: console, database, service
+    active: console, database, service, actuators
   application:
     name: auth
 
