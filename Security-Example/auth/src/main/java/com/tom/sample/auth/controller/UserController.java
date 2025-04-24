@@ -55,13 +55,15 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body("User password was changed");
 	}
 	
-	@PostMapping("/find")
+	@PostMapping("/")
 	@PreAuthorize("hasAuthority('user:read')")
-	public ResponseEntity <List<UserResponse>> findUser(@RequestParam String userInfo, Principal connectedUser) {
-		var data = service.findUser(userInfo, connectedUser);
+	public ResponseEntity <List<UserResponse>> findUser(@RequestParam String user, Principal connectedUser) {
+		var data = service.findUser(user, connectedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(data);
 	}
 	
 	// @PreAuthorize("hasAuthority('user:delete')")
+	// delete my account
+	
 	
 }

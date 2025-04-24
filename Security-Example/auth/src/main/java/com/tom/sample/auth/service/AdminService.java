@@ -10,6 +10,10 @@ public class AdminService {
 
 	// details the logs
 	
+	// find by user
+	
+	// find a user 
+	
 	// remove user
 	
 	// get all users
