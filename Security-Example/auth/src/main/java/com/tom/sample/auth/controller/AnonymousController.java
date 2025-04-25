@@ -26,7 +26,6 @@ public class AnonymousController {
 
 	private final UserService service;
 	
-	// make it when create an user make it get an email for authentication
 	@PostMapping("/sign-up")
 	public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody RegisterRequest request) {
 		var register = service.register(request);

@@ -34,4 +34,8 @@ public class AdminService {
 
 	// Change user role
 	
+	// delete user
+	
+	// delete batch of users
+	
 }

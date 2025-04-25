@@ -14,8 +14,8 @@ import com.tom.sample.auth.model.enums.TokenType;
 
 @Service
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface SystemMapper {
-	SystemMapper INSTANCE = Mappers.getMapper(SystemMapper.class);
+public interface AuthenticationMapper {
+	AuthenticationMapper INSTANCE = Mappers.getMapper(AuthenticationMapper.class);
 	
 	// @Mapping(source = "", target = "")
 	

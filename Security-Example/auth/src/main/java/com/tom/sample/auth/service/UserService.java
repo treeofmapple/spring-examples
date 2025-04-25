@@ -22,7 +22,7 @@ import com.tom.sample.auth.dto.UserResponse;
 import com.tom.sample.auth.exception.AlreadyExistsException;
 import com.tom.sample.auth.exception.IllegalStatusException;
 import com.tom.sample.auth.exception.NotFoundException;
-import com.tom.sample.auth.mapper.SystemMapper;
+import com.tom.sample.auth.mapper.AuthenticationMapper;
 import com.tom.sample.auth.model.User;
 import com.tom.sample.auth.model.enums.Role;
 import com.tom.sample.auth.repository.UserRepository;
@@ -40,7 +40,7 @@ public class UserService {
 	// details the logs
 	
 	private final JwtService jwtService;
-	private final SystemMapper mapper;
+	private final AuthenticationMapper mapper;
 	private final AuthenticationManager authManager;
 	private final PasswordEncoder passwordEncoder;
 	private final UserRepository repository;

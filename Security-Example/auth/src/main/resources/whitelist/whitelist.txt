@@ -1,4 +1,1 @@
 /v1/auth/**
-/actuator/health
-/actuator/info
-/OPTIONS/**

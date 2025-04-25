@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.tom.sample.auth.dto.UpdateRequest;
 import com.tom.sample.auth.exception.NotFoundException;
-import com.tom.sample.auth.mapper.SystemMapper;
+import com.tom.sample.auth.mapper.AuthenticationMapper;
 import com.tom.sample.auth.model.User;
 import com.tom.sample.auth.model.enums.TokenType;
 import com.tom.sample.auth.repository.TokenRepository;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class EntityUpdater {
 
 	private final TokenRepository tokenRepository;
-	private final SystemMapper mapper;
+	private final AuthenticationMapper mapper;
 	
 	public User mergeData(User user, UpdateRequest request) {
 		user.setUsername(request.username());
