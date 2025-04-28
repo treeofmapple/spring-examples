@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tom.sample.auth.common.EntityUpdater;
 import com.tom.sample.auth.common.Operations;
 import com.tom.sample.auth.common.ServiceLogger;
+import com.tom.sample.auth.config.MailService;
 import com.tom.sample.auth.dto.AuthenticationRequest;
 import com.tom.sample.auth.dto.AuthenticationResponse;
 import com.tom.sample.auth.dto.PasswordRequest;
@@ -54,6 +56,8 @@ public class UserService {
 	private final UserRepository repository;
 	private final EntityUpdater updater;
 	private final Operations operations;
+	private final MailService mailService;
+	private final Environment environment;
 
 	public UserResponse getCurrentUser(Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
@@ -143,6 +147,16 @@ public class UserService {
 				passwordEncoder.encode(request.password()), false, operations.generateVerificationToken());
 		user.setRole(Role.USER);
 		var savedUser = repository.save(user);
+		
+	    boolean sslEnabled = Boolean.parseBoolean(environment.getProperty("server.ssl.enabled", "false"));
+	    String protocol = sslEnabled ? "https" : "http";
+	    String serverPort = environment.getProperty("server.port", "8080");
+	    String verificationToken = user.getVerificationToken();
+	    String verificationLink = protocol + "://" + operations.getPublicIp() + ":" + serverPort 
+	                               + "/verify-email?token=" + verificationToken;
+
+		mailService.sendEmail(user.getEmail(), "Verify your Email", "Click on the link to verificate your account: " + verificationLink);
+		
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);
 		updater.saveUserToken(savedUser, jwtToken);

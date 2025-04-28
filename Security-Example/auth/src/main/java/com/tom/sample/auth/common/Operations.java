@@ -1,5 +1,13 @@
 package com.tom.sample.auth.common;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -45,6 +53,30 @@ public class Operations {
 	public String generateVerificationToken() {
 		String token = UUID.randomUUID().toString();
 		return token;
+	}
+	
+	public String getPublicIp() {
+	    String publicIp = "Unknown";
+	    try {
+	        @SuppressWarnings("deprecation")
+	        URL url = new URL("https://ifconfig.me");
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setRequestMethod("GET");
+	        connection.setRequestProperty("User-Agent", "curl");
+
+	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+	            publicIp = reader.readLine();
+	        }
+	    } catch (IOException e) {
+	        ServiceLogger.error(e.getMessage());
+	    }
+	    
+	    try {
+	        InetAddress inetAddress = InetAddress.getByName(publicIp);
+	        return inetAddress.getHostName();
+	    } catch (UnknownHostException e) {
+	        return publicIp;
+	    }
 	}
 	
 	public long parseDuration(String duration) {

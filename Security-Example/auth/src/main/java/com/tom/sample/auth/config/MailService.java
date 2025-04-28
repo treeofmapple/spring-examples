@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MailConfig {
+public class MailService {
 
 	private final JavaMailSender mailSender;
 	

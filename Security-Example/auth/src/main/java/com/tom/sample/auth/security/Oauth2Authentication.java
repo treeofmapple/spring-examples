@@ -59,7 +59,8 @@ public class Oauth2Authentication implements AuthenticationSuccessHandler {
 					age != null ? age : 0, 
 					email, 
 					"",
-					true
+					true,
+					null
 				);
 			user.setRole(Role.USER);
 			userRepository.save(user);
