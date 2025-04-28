@@ -1,7 +1,10 @@
 package com.tom.sample.auth.common;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,13 +12,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.tom.sample.auth.model.User;
 
 import lombok.RequiredArgsConstructor;
+import net.datafaker.Faker;
 
 @Configuration
 @RequiredArgsConstructor
-public class GenerateData implements DatagenUtil {
+@SuppressWarnings("unused")
+public class GenerateData {
 
 	private final Map<String, String> userPasswords = new LinkedHashMap<>();
 	private final PasswordEncoder passwordEncoder;
+	private final Faker faker = new Faker();
+	private final ThreadLocalRandom loc = ThreadLocalRandom.current();
+	private final Set<String> generatedNames = new HashSet<>();
+	private final Set<String> passwords = new HashSet<>();
 	
 	protected User datagen() {
 		User user = new User();
@@ -52,21 +61,21 @@ public class GenerateData implements DatagenUtil {
     	return password;
     }
     
-	protected double getRandomDouble(double min, double max) {
+	private double getRandomDouble(double min, double max) {
 	    if (max <= min) {
 	        return min;
 	    }
 		return loc.nextDouble(min, max);
 	}
 
-	protected int getRandomInt(int min, int max) {
+	private int getRandomInt(int min, int max) {
 	    if (max <= min) {
 	        return min;
 	    }
 		return loc.nextInt(min, max);
 	}
 
-	protected boolean isAtributesMet(int atribute) {
+	private boolean isAtributesMet(int atribute) {
 		return loc.nextInt(100) < atribute;
 	} 
 }

@@ -1,13 +1,3 @@
-spring:
-  output:
-    ansi:
-      enabled: always
-  aop:
-    auto: true # When you don't need logging.
-  banner:
-    location: classpath:banner/banner.txt
-  main:
-    banner-mode: console
 logging:
   level:
     root: info
@@ -18,3 +8,12 @@ logging:
         redis: debug
   pattern:
     console: '%n %d{HH:mm:ss} | %highlight(%-5level) | %cyan(%logger{30}) | %msg'
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  aop:
+    auto: true # When you don't need logging.
+  main:
+    banner-mode: console

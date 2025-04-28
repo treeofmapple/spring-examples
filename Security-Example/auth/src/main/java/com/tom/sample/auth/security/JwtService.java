@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.tom.sample.auth.common.ParseTime;
+import com.tom.sample.auth.common.Operations;
 import com.tom.sample.auth.model.User;
 
 import io.jsonwebtoken.Claims;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtService {
 
-	private final ParseTime time;
+	private final Operations operations;
 
     @Value("${application.security.secret-key}")
     private String secretKey;
@@ -40,11 +40,11 @@ public class JwtService {
 	}
 	
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails ) {
-		return buildToken(extraClaims, userDetails, time.parseDuration(jwtExpiration));
+		return buildToken(extraClaims, userDetails, operations.parseDuration(jwtExpiration));
 	}
 	
 	public String generateRefreshToken(UserDetails userDetails) {
-		return buildToken(new HashMap<>(), userDetails, time.parseDuration(refreshExpiration));
+		return buildToken(new HashMap<>(), userDetails, operations.parseDuration(refreshExpiration));
 	}
 	
 	public boolean isTokenValid(String token, UserDetails userDetails){

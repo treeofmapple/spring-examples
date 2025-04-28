@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.tom.sample.auth.common.Operations;
 import com.tom.sample.auth.dto.PasswordRequest;
 import com.tom.sample.auth.dto.UpdateRequest;
 import com.tom.sample.auth.dto.UserResponse;
 import com.tom.sample.auth.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/v1/user")
@@ -27,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService service;
+	private final Operations operations;
 	
 	@GetMapping("/me")
     @PreAuthorize("hasAuthority('user:read')")
@@ -62,8 +66,13 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(data);
 	}
 	
-	// @PreAuthorize("hasAuthority('user:delete')")
-	// delete my account
-	
-	
+	@PostMapping("/remove")
+	@PreAuthorize("hasAuthority('user:delete')")
+	public ResponseEntity <String> deleteMe(HttpServletRequest request, HttpServletResponse response, Principal connectedUser) {
+		var data = service.deleteMe(connectedUser);
+		request.getSession().invalidate();
+	    operations.clearCookie(response, "access_token");
+	    operations.clearCookie(response, "refresh_token");
+		return ResponseEntity.status(HttpStatus.OK).body(data);
+	}
 }

@@ -45,6 +45,9 @@ public class WebSecurityConfig {
     		
     		.exceptionHandling(exception -> 
     				exception.authenticationEntryPoint(unauthorizedHandler))
+    		.oauth2Login(oauth2 -> oauth2
+    				.loginPage("/oauth/login")
+    		)
     		.sessionManagement(session ->
     				session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     				.maximumSessions(1)

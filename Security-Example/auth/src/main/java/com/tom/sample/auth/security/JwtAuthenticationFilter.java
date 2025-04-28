@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.tom.sample.auth.common.Operations;
 import com.tom.sample.auth.exception.InternalException;
 import com.tom.sample.auth.repository.TokenRepository;
 
@@ -26,6 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final UserDetailsService userDetailsService;
 	private final TokenRepository tokenRepository;
+	private final Operations operations;
 	private final JwtService jwtService;
 	
 	@Override 
@@ -39,15 +41,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 		
-		final String authHeader = request.getHeader("Authorization");
-		if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-			filterChain.doFilter(request, response);
-			return;
-		}
-		
-		final String jwt = authHeader.substring(7);
-		final String identifier = jwtService.extractUsername(jwt);
-		
+	    String jwt = null;
+
+	    final String authHeader = request.getHeader("Authorization");
+	    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+	        jwt = authHeader.substring(7);
+	    } else {
+	        jwt = operations.getCookieValue(request, "access_token");
+	    }
+
+	    if (jwt == null) {
+	        filterChain.doFilter(request, response);
+	        return;
+	    }
+	    final String identifier = jwtService.extractUsername(jwt);
 	    if (identifier == null) {
 	        filterChain.doFilter(request, response);
 	        return;

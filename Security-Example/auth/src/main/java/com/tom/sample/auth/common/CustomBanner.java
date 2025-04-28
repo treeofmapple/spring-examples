@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.InetAddress;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import org.springframework.boot.Banner;
@@ -25,7 +26,7 @@ public class CustomBanner implements Banner {
             String serverPort = environment.getProperty("server.port", "8080");
             String profiles = String.join(", ", environment.getActiveProfiles());
             String protocol = sslEnabled ? "https" : "http";
-            String ip = InetAddress.getLocalHost().getHostAddress();
+            String ip = getPublicIp();
             
             out.println();
             out.println("Powered by Spring Boot: " + version);
@@ -39,6 +40,24 @@ public class CustomBanner implements Banner {
         }
     }
 	
+	private String getPublicIp() {
+	    String publicIp = "Unknown";
+	    try {
+	        @SuppressWarnings("deprecation")
+			URL url = new URL("https://ifconfig.me");
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setRequestMethod("GET");
+	        connection.setRequestProperty("User-Agent", "curl");
+
+	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+	            publicIp = reader.readLine();
+	        }
+	    } catch (IOException e) {
+	        ServiceLogger.error(e.getMessage());
+	    }
+	    return publicIp;
+	}
+	
 	private void getPathResource(PrintStream out) {
 		ClassPathResource resource = new ClassPathResource("banner/banner.txt");
 		try (BufferedReader reader = new BufferedReader(
@@ -51,5 +70,4 @@ public class CustomBanner implements Banner {
 			e.printStackTrace();
 		}
 	}
-	
 }
