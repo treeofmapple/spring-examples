@@ -140,7 +140,7 @@ public class UserService {
 		}
 
 		var user = mapper.buildAttributes(request.name(), request.username(), request.age(), request.email(),
-				passwordEncoder.encode(request.password()));
+				passwordEncoder.encode(request.password()), false, operations.generateVerificationToken());
 		user.setRole(Role.USER);
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);
@@ -158,6 +158,10 @@ public class UserService {
 		var user = repository.findByUsername(userIdentifier).or(() -> repository.findByEmail(userIdentifier))
 				.orElseThrow(() -> new NotFoundException("Username or email wasn't found"));
 
+	    if (!user.isEmailVerified()) {
+	        throw new IllegalStatusException("Please verify your email before login");
+	    }
+	    
 		authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), request.password()));
 
 		var jwtToken = jwtService.generateToken(user);
@@ -167,7 +171,7 @@ public class UserService {
 		ServiceLogger.info("User authenticated: {}", userIdentifier);
 
 		operations.addCookie(response, "access_token", jwtToken, operations.parseDuration(jwtExpiration));
-		operations.addCookie(response, "refresh_token", jwtToken, operations.parseDuration(refreshExpiration));
+		operations.addCookie(response, "refresh_token", refreshToken, operations.parseDuration(refreshExpiration));
 		var responses = mapper.buildResponse(jwtToken, refreshToken);
 		return responses;
 	}
@@ -196,6 +200,27 @@ public class UserService {
 		}
 	}
 
+	public void verificateEmail(String token) {
+	    var user = repository.findByVerificationToken(token)
+	            .orElseThrow(() -> new NotFoundException("Invalid verification token"));
+	    user.setEmailVerified(true);
+	    user.setVerificationToken(null);
+	    repository.save(user);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Transactional
 	public String deleteMe(Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();

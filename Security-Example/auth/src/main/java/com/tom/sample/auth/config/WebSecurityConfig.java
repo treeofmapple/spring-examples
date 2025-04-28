@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.tom.sample.auth.common.WhitelistLoader;
 import com.tom.sample.auth.exception.AuthEntryPointJwt;
 import com.tom.sample.auth.security.JwtAuthenticationFilter;
+import com.tom.sample.auth.security.Oauth2Authentication;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,7 @@ public class WebSecurityConfig {
 	private final AuthenticationProvider provider;
 	private final LogoutHandler logoutHandler;
 	private final CorsConfigurationSource corsConfigurationSource;
+	private final Oauth2Authentication authentication;
 	
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,6 +49,7 @@ public class WebSecurityConfig {
     				exception.authenticationEntryPoint(unauthorizedHandler))
     		.oauth2Login(oauth2 -> oauth2
     				.loginPage("/oauth/login")
+    				.successHandler(authentication)
     		)
     		.sessionManagement(session ->
     				session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -68,6 +71,7 @@ public class WebSecurityConfig {
         			SecurityContextHolder.clearContext()
                 )
         );
+    	
     	return http.build();
 	}
 	

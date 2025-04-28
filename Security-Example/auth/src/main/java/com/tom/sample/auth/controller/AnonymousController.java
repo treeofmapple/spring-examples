@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tom.sample.auth.dto.AuthenticationRequest;
@@ -39,9 +40,15 @@ public class AnonymousController {
 	}
 	
 	@PostMapping("/refresh-token")
-	public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		service.refreshToken(request, response);
-		return ResponseEntity.status(HttpStatus.OK).body("Token from user refreshed");
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
+	@PostMapping("/email-verification")
+	public ResponseEntity<?> verificationEmail(@RequestParam("token") String token) {
+		service.verificateEmail(token);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+	
 }

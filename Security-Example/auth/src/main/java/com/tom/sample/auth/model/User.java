@@ -50,6 +50,12 @@ public class User extends Auditable implements UserDetails {
 	
 	@Column(name = "password", unique = false, updatable = true, nullable = false)
 	private String password;
+	
+	@Column(name = "email-verified", updatable = true)
+	private boolean emailVerified;
+	
+	@Column(name = "verification-token", updatable = true, nullable = true, unique = true)
+	private String verificationToken;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;

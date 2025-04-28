@@ -24,7 +24,9 @@ public interface AuthenticationMapper {
 	@Mapping(source = "age", target = "age")
 	@Mapping(source = "email", target = "email")
 	@Mapping(source = "password", target = "password")
-	User buildAttributes(String name, String username, int age, String email, String password);
+	@Mapping(source = "emailVerified", target = "emailVerified")
+	@Mapping(source = "verificationToken", target = "verificationToken")
+	User buildAttributes(String name, String username, int age, String email, String password, boolean emailVerified, String verificationToken);
 	
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "user", target = "user")

@@ -1,5 +1,6 @@
 package com.tom.sample.auth.common;
 
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
@@ -39,6 +40,11 @@ public class Operations {
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
+	}
+	
+	public String generateVerificationToken() {
+		String token = UUID.randomUUID().toString();
+		return token;
 	}
 	
 	public long parseDuration(String duration) {
