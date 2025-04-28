@@ -34,9 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 									@NonNull FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		// Make this a way to be changeable
-		
-		if(request.getServletPath().contains("/v1/auth")) {
+		if(request.getServletPath().contains("/v1/auth")) { // Make this a way to be changeable
 			filterChain.doFilter(request, response);
 			return;
 		}

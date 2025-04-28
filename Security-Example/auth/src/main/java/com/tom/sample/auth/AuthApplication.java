@@ -11,5 +11,11 @@ public class AuthApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AuthApplication.class, args);
 	}
+	
+	// finish the system
+	
+	// add cookies and
+	
+	// oauth2
 
 }
