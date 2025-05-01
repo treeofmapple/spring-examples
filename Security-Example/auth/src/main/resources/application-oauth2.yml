@@ -4,11 +4,12 @@ spring:
       client:
         registration:
           google:
-            client-id: YOUR_CLIENT_ID
-            client-secret: YOUR_CLIENT_SECRET
+            client-id: ${OAUTH_CLIENT}
+            client-secret: ${OAUTH_SECRET}
             scope:
               - email
               - profile
+              - https://www.googleapis.com/auth/user.birthday.read
         provider:
           google:
             authorization-uri: https://accounts.google.com/o/oauth2/v2/auth

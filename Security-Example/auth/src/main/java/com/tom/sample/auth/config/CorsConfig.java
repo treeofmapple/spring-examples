@@ -22,7 +22,7 @@ public class CorsConfig implements WebMvcConfigurer {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 	    CorsConfiguration config = new CorsConfiguration();
-	    config.setAllowedOrigins(Arrays.asList(allowedOrigins)); // from @Value
+	    config.setAllowedOrigins(Arrays.asList(allowedOrigins));
 	    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 	    config.setAllowedHeaders(Arrays.asList("*"));
 	    config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));

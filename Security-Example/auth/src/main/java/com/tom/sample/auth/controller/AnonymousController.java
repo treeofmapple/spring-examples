@@ -46,7 +46,7 @@ public class AnonymousController {
 	}
 
 	@PostMapping("/email-verification")
-	public ResponseEntity<?> verificationEmail(@RequestParam("token") String token) {
+	public ResponseEntity<?> verificationEmail(@RequestParam String token) {
 		service.verificateEmail(token);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}

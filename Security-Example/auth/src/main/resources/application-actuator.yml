@@ -13,5 +13,3 @@ management:
       show-details: always
     metrics:
       access: read-only 
-    prometheus:
-      access: unrestricted
