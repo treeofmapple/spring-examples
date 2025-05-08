@@ -12,8 +12,10 @@ public class AuthApplication {
 		SpringApplication.run(AuthApplication.class, args);
 	}
 	
-	// finish the system
+	// oauth2
 	
-	// get user age
+	// mailsender
+	
+	// admin
 	
 }
