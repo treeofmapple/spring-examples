@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: console, h2, cache
+  application:
+    name: example-3
+
+server:
+  port: 8000 
