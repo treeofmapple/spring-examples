@@ -3,7 +3,7 @@ spring:
     ansi:
       enabled: always
   aop:
-    auto: true # When you don't need logging.
+    auto: true 
   banner:
     location: classpath:banner/banner.txt
   main:
