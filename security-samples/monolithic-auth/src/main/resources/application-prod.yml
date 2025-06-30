@@ -1,0 +1,54 @@
+spring:
+  cache:
+    cache-names: rate-limit-bucket
+    caffeine:
+      spec: >
+        maximumSize = 10000,
+        expireAfterAccess=30m
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:example}
+
+    # ?ssl=false&sslmode=disable
+    # ?ssl=true&sslmode=required
+
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      max-lifetime: 1800000 # 30 minutes (in ms)
+      idle-timeout: 600000 # 10 minutes (should be less than maxLifetime)
+      connection-timeout: 30000 # 30 seconds
+      minimum-idle: 5
+      maximum-pool-size: 20
+      pool-name: "ProdDBPool"
+  jpa:
+    open-in-view: false 
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    locations: classpath:db/migration
+    enabled: true
+    clean-disabled: true 
+    validate-on-migrate: true
+    # Always on first run should be false
+    baseline-on-migrate: ${FLYWAY_BASELINE-MIGRATION:false} 
+    baseline-version: ${FLYWAY_VERSION:1}
+
+# 'm' for minutes, 'h' for hours, 'd' for days
+application:
+  security:
+    whitelist: ${WHITELIST_URLS} # /v1/auth/sign-in, /v1/auth/sign-up, /v1/auth/refresh-token, /error
+    secret-key: ${SECURITY_KEY}
+    expiration: ${EXPIRATION_KEY:15m}
+    refresh-token: ${REFRESH_KEY:7d}
+    cookie-name: _adaptative_stored_int
+  page:
+    size: ${PAGE_SIZE:10}
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS}
+    time: ${CORS_TIME:3600}
+  rate:
+    limit: ${RATE_LIMIT:20}
+    refil:
+      time: ${REFIL_TIME:30S} # Seconds
