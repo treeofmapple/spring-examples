@@ -18,9 +18,9 @@ import com.tom.sample.auth.exception.InvalidDateException;
 import com.tom.sample.auth.exception.NotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

@@ -29,10 +29,10 @@ public class JwtService {
     @Value("${application.security.secret-key}")
     private String secretKey;
 
-	@Value("${application.security.expiration}")
+	@Value("${application.security.expiration:1H}")
 	private String jwtExpiration;
 
-	@Value("${application.security.refresh-token.expiration}")
+	@Value("${application.security.refresh-token.expiration:7D}")
 	private String refreshExpiration;
 
 	public String generateToken(UserDetails userDetails) {
@@ -56,7 +56,7 @@ public class JwtService {
 		return extractClaim(token, Claims::getSubject);
 	}
 	
-	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+	private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 		final Claims claims = extractAllClaims(token);
 		return claimsResolver.apply(claims);
 	}
