@@ -1,10 +1,14 @@
 spring:
   cache:
-    cache-names: rate-limit-bucket
+    cache-names: 
+      - "rate-limit-bucket"
+      - "login-attempt"
+      - "register-attempt"
     caffeine:
-      spec: >
-        maximumSize = 10000,
-        expireAfterAccess=30m
+      spec: 
+        rate-limit-bucket: "maximumSize=10000,expireAfterAccess=30m"
+        login-attempt: "expireAfterWrite=8m"
+        register-attempt: "expireAfterWrite=1d"
 
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:example}
@@ -38,11 +42,12 @@ spring:
 # 'm' for minutes, 'h' for hours, 'd' for days
 application:
   security:
-    whitelist: ${WHITELIST_URLS} # /v1/auth/sign-in, /v1/auth/sign-up, /v1/auth/refresh-token, /error
     secret-key: ${SECURITY_KEY}
     expiration: ${EXPIRATION_KEY:15m}
     refresh-token: ${REFRESH_KEY:7d}
     cookie-name: _adaptative_stored_int
+    login:
+      attempts: ${LOGIN_ATTEMPTS:8}
   page:
     size: ${PAGE_SIZE:10}
   cors:
@@ -52,3 +57,19 @@ application:
     limit: ${RATE_LIMIT:20}
     refil:
       time: ${REFIL_TIME:30S} # Seconds
+  front:
+    csrf: ${CSRF_ENABLED:true}
+  login:
+    max:
+      attempts: ${LOGIN_ATTEMPTS:5}
+    user:
+      creation: ${CREATION_LIMIT:3}
+
+settings:
+  security:
+    generated:
+      user: ${ADMIN_USER}
+      email: ${ADMIN_EMAIL}
+      password: ${ADMIN_PASSWORD}
+
+
