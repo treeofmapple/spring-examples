@@ -18,42 +18,60 @@ import lombok.RequiredArgsConstructor;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminFeatureController {
 
-    private final FeatureFlagService featureFlagService;
+	private final FeatureFlagService featureFlagService;
 
-    @PostMapping("/sign-in/disable")
-    public ResponseEntity<String> disableSignIn() {
-        featureFlagService.setSignInEnabled(false);
-        return ResponseEntity.status(HttpStatus.OK).body("Sign-in endpoint has been disabled.");
-    }
+	@PostMapping("/sign-in/disable")
+	public ResponseEntity<String> disableSignIn() {
+		if (!featureFlagService.isSignInEnabled()) {
+			return ResponseEntity.status(HttpStatus.OK).body("Sign-in endpoint was already disabled.");
+		}
 
-    @PostMapping("/sign-in/enable")
-    public ResponseEntity<String> enableSignIn() {
-        featureFlagService.setSignInEnabled(true);
-        return ResponseEntity.status(HttpStatus.OK).body("Sign-in endpoint has been enabled.");
-    }
+		featureFlagService.setSignInEnabled(false);
+		return ResponseEntity.status(HttpStatus.OK).body("Sign-in endpoint has been disabled.");
+	}
 
-    @GetMapping("/sign-in/status")
-    public ResponseEntity<String> getSignInStatus() {
-        boolean isEnabled = featureFlagService.isSignInEnabled();
-        return ResponseEntity.status(HttpStatus.OK).body("Sign-in endpoint is currently: " + (isEnabled ? "ENABLED" : "DISABLED"));
-    }
-    
-    @PostMapping("/sign-up/disable")
-    public ResponseEntity<String> disableSignUp() {
-        featureFlagService.setSignUpEnabled(false);
-        return ResponseEntity.status(HttpStatus.OK).body("Sign-up endpoint has been disabled.");
-    }
+	@PostMapping("/sign-in/enable")
+	public ResponseEntity<String> enableSignIn() {
+		if (featureFlagService.isSignInEnabled()) {
+			return ResponseEntity.status(HttpStatus.OK).body("Sign-in endpoint was already enabled.");
+		}
 
-    @PostMapping("/sign-up/enable")
-    public ResponseEntity<String> enableSignUp() {
-        featureFlagService.setSignUpEnabled(true);
-        return ResponseEntity.status(HttpStatus.OK).body("Sign-up endpoint has been enabled.");
-    }
+		featureFlagService.setSignInEnabled(true);
+		return ResponseEntity.status(HttpStatus.OK).body("Sign-in endpoint has been enabled.");
+	}
 
-    @GetMapping("/sign-up/status")
-    public ResponseEntity<String> getSignUnStatus() {
-        boolean isEnabled = featureFlagService.isSignUpEnabled();
-        return ResponseEntity.status(HttpStatus.OK).body("Sign-up endpoint is currently: " + (isEnabled ? "ENABLED" : "DISABLED"));
-    }
-    
+	@GetMapping("/sign-in/status")
+	public ResponseEntity<String> getSignInStatus() {
+		boolean isEnabled = featureFlagService.isSignInEnabled();
+		return ResponseEntity.status(HttpStatus.OK)
+				.body("Sign-in endpoint is currently: " + (isEnabled ? "ENABLED" : "DISABLED"));
+	}
+
+	@PostMapping("/sign-up/disable")
+	public ResponseEntity<String> disableSignUp() {
+		if (!featureFlagService.isSignUpEnabled()) {
+			return ResponseEntity.status(HttpStatus.OK).body("Sign-up endpoint was already disabled.");
+		}
+
+		featureFlagService.setSignUpEnabled(false);
+		return ResponseEntity.status(HttpStatus.OK).body("Sign-up endpoint has been disabled.");
+	}
+
+	@PostMapping("/sign-up/enable")
+	public ResponseEntity<String> enableSignUp() {
+		if (featureFlagService.isSignInEnabled()) {
+			return ResponseEntity.status(HttpStatus.OK).body("Sign-up endpoint was already enabled.");
+		}
+
+		featureFlagService.setSignUpEnabled(true);
+		return ResponseEntity.status(HttpStatus.OK).body("Sign-up endpoint has been enabled.");
+	}
+
+	@GetMapping("/sign-up/status")
+	public ResponseEntity<String> getSignUnStatus() {
+		boolean isEnabled = featureFlagService.isSignUpEnabled();
+		return ResponseEntity.status(HttpStatus.OK)
+				.body("Sign-up endpoint is currently: " + (isEnabled ? "ENABLED" : "DISABLED"));
+	}
+
 }
