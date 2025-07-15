@@ -2,7 +2,7 @@ package com.tom.auth.monolithic.user.dto.admin;
 
 import java.time.ZonedDateTime;
 
-public record AdminUserResponse(
+public record UserAdminResponse(
 		
 		String username,
 		String email,

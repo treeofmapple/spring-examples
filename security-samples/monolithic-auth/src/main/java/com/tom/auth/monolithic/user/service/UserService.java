@@ -1,5 +1,7 @@
 package com.tom.auth.monolithic.user.service;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -66,13 +68,19 @@ public class UserService {
 	}
 	
 	@Transactional(readOnly = true)
-	public PageUserResponse findUserByParams(int page, String username, String email, Integer age) {
+	public PageUserResponse searchUserByParams(int page, String username, String email, Integer age) {
 		Specification<User> spec = UserSpecification.findByCriteria(username, email, age);
 		log.info("IP: {}, is finding params: {}", securityUtils.getRequestingClientIp());
 
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 		Page<User> users = userRepository.findAll(spec, pageable);
 		return userMapper.toResponse(users);
+	}
+	
+	@Transactional(readOnly = true)
+	public UserResponse searchUserById(UUID query) {
+		var user = userUtils.findUserByUserId(query);
+		return userMapper.toResponse(user);
 	}
 	
 	@Transactional(readOnly = true)

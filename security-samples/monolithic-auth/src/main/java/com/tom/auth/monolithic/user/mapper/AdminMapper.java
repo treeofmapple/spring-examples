@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.data.domain.Page;
 
-import com.tom.auth.monolithic.user.dto.admin.AdminUserResponse;
+import com.tom.auth.monolithic.user.dto.admin.UserAdminResponse;
 import com.tom.auth.monolithic.user.dto.admin.DeleteListResponse;
 import com.tom.auth.monolithic.user.dto.admin.PageAdminUserResponse;
 import com.tom.auth.monolithic.user.model.User;
@@ -28,7 +28,7 @@ public interface AdminMapper {
 	@Mapping(source = "accountNonLocked", target = "accountNonLocked")
 	@Mapping(source = "enabled", target = "enabled")
 	@Mapping(source = "user", target = "lastLogin", qualifiedByName = "getLastLoginTime")
-	AdminUserResponse toResponse(User user);
+	UserAdminResponse toResponse(User user);
     
     default DeleteListResponse toResponse(List<UUID> ids) {
         if (ids == null) {
@@ -37,13 +37,13 @@ public interface AdminMapper {
         return new DeleteListResponse(ids);
     }
     
-	List<AdminUserResponse> toResponseList(List<User> users);
+	List<UserAdminResponse> toResponseList(List<User> users);
 	
 	default PageAdminUserResponse toResponse(Page<User> page) {
 		if(page == null) {
 			return null;
 		}
-		List<AdminUserResponse> content = toResponseList(page.getContent());
+		List<UserAdminResponse> content = toResponseList(page.getContent());
 		return new PageAdminUserResponse(
 				content,
 				page.getNumber(),

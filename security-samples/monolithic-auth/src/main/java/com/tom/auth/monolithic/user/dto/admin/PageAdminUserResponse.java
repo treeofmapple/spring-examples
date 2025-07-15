@@ -4,7 +4,7 @@ import java.util.List;
 
 public record PageAdminUserResponse(
 		
-		List<AdminUserResponse> content,
+		List<UserAdminResponse> content,
 		int page,
 		int size,
 		long totalPages,

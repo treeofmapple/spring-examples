@@ -20,12 +20,12 @@ import org.springframework.util.StringUtils;
 
 import com.tom.auth.monolithic.security.SecurityUtils;
 import com.tom.auth.monolithic.user.dto.admin.AdminPasswordUpdateRequest;
-import com.tom.auth.monolithic.user.dto.admin.AdminUserResponse;
 import com.tom.auth.monolithic.user.dto.admin.DeleteListResponse;
 import com.tom.auth.monolithic.user.dto.admin.DeleteUsersRequest;
 import com.tom.auth.monolithic.user.dto.admin.PageAdminLoginHistoryResponse;
 import com.tom.auth.monolithic.user.dto.admin.PageAdminUserResponse;
 import com.tom.auth.monolithic.user.dto.admin.PageLoginHistoryResponse;
+import com.tom.auth.monolithic.user.dto.admin.UserAdminResponse;
 import com.tom.auth.monolithic.user.dto.authentication.PasswordAuthenticationRequest;
 import com.tom.auth.monolithic.user.dto.user.PasswordUpdateRequest;
 import com.tom.auth.monolithic.user.dto.user.UpdateAccountRequest;
@@ -62,13 +62,13 @@ public class AdminService {
 	private final TokenUtils tokenUtils;
 	private final SecurityUtils securityUtils;
 	
-	public AdminUserResponse getCurrentUserAdmin() {
+	public UserAdminResponse getCurrentUserAdmin() {
 		var user = securityUtils.getAuthenticatedUserOrThrow();
 		return adminMapper.toResponse(user);
 	}
 	
 	@Transactional(readOnly = true)
-	public PageAdminUserResponse findUserByParamsAdmin(int page, String username, String email, Integer age, String roles, Boolean accountLocked) {
+	public PageAdminUserResponse searchUserByParamsAdmin(int page, String username, String email, Integer age, String roles, Boolean accountLocked) {
 		
         Role roleEnum = null;
         if (StringUtils.hasText(roles)) {
@@ -84,6 +84,12 @@ public class AdminService {
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 		Page<User> users = userRepository.findAll(spec, pageable);
 		return adminMapper.toResponse(users);
+	}
+	
+	@Transactional(readOnly = true)
+	public UserAdminResponse searchUserById(UUID query) {
+		var user = userUtils.findUserByUserId(query);
+		return adminMapper.toResponse(user);
 	}
 
 	@Transactional(readOnly = true)
@@ -134,7 +140,7 @@ public class AdminService {
 	}
 
 	@Transactional
-	public AdminUserResponse updateAnUser(String identifier, UpdateAccountRequest request) {
+	public UserAdminResponse updateAnUser(String identifier, UpdateAccountRequest request) {
 		log.info("IP: {}, admin is updating user: {}", securityUtils.getRequestingClientIp(), identifier);
 		
 		var user = userUtils.findUserByIdOrIdentifier(identifier);
@@ -150,7 +156,7 @@ public class AdminService {
 	}
 	
 	@Transactional
-	public AdminUserResponse updateUserAdmin(UpdateAccountRequest request) {
+	public UserAdminResponse updateUserAdmin(UpdateAccountRequest request) {
 		log.info("IP: {}, admin is updating their own admin account.", securityUtils.getRequestingClientIp());
 		
 		var user = securityUtils.getAuthenticatedUserOrThrow();
@@ -193,7 +199,7 @@ public class AdminService {
 	}
 
 	@Transactional
-	public AdminUserResponse banUser(String identifier) {
+	public UserAdminResponse banUser(String identifier) {
 		log.info("IP: {}, admin is banning user: {}", securityUtils.getRequestingClientIp(), identifier);
 		
 		var user = userUtils.findUserByIdOrIdentifier(identifier);
@@ -203,7 +209,7 @@ public class AdminService {
 	}
 
 	@Transactional
-	public AdminUserResponse unbanUser(String identifier) {
+	public UserAdminResponse unbanUser(String identifier) {
 		log.info("IP: {}, admin is banning user: {}", securityUtils.getRequestingClientIp(), identifier);
 		
 		var user = userUtils.findUserByIdOrIdentifier(identifier);

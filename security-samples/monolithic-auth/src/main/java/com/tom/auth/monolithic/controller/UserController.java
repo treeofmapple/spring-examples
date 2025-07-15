@@ -1,5 +1,7 @@
 package com.tom.auth.monolithic.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -44,12 +46,20 @@ public class UserController {
 	
 	@GetMapping(value = "/search", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PageUserResponse> findUserByParams(
+	public ResponseEntity<PageUserResponse> searchUserByParams(
 			@RequestParam(defaultValue = "0") @Min(0) int page,
 			@RequestParam(required = false) String username,
 			@RequestParam(required = false) String email,
 			@RequestParam(required = false) @Min(1) Integer age) {
-		var response = userService.findUserByParams(page, username, email, age); 
+		var response = userService.searchUserByParams(page, username, email, age); 
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	
+	@GetMapping(value = "/search/id", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserResponse> searchUserById(
+			@RequestParam UUID userId) {
+		var response = userService.searchUserById(userId); 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	

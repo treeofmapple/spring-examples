@@ -1,5 +1,7 @@
 package com.tom.auth.monolithic.controller;
 
+import java.util.UUID;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tom.auth.monolithic.user.dto.admin.AdminPasswordUpdateRequest;
-import com.tom.auth.monolithic.user.dto.admin.AdminUserResponse;
+import com.tom.auth.monolithic.user.dto.admin.UserAdminResponse;
 import com.tom.auth.monolithic.user.dto.admin.DeleteListResponse;
 import com.tom.auth.monolithic.user.dto.admin.DeleteUsersRequest;
 import com.tom.auth.monolithic.user.dto.admin.PageAdminLoginHistoryResponse;
@@ -43,14 +45,14 @@ public class AdminController {
 	
 	@GetMapping(value = "/me", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AdminUserResponse> getCurrentAdminUser() {
+	public ResponseEntity<UserAdminResponse> getCurrentAdminUser() {
 		var response = service.getCurrentUserAdmin();
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@GetMapping(value = "/search",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PageAdminUserResponse> findUserByParamsAdmin(
+	public ResponseEntity<PageAdminUserResponse> searchUserByParamsAdmin(
 			@RequestParam(defaultValue = "0") @Min(0) int page,
 			@RequestParam(required = false) String username,
 			@RequestParam(required = false) String email,
@@ -58,7 +60,16 @@ public class AdminController {
 			@RequestParam(required = false) String roles,
 			@RequestParam(required = false) Boolean accountLocked
 			) {
-		var response = service.findUserByParamsAdmin(page, username, email, age, roles, accountLocked);
+		var response = service.searchUserByParamsAdmin(page, username, email, age, roles, accountLocked);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	
+	@GetMapping(value = "/search/id",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserAdminResponse> searchUserById(
+			@RequestParam UUID userId
+			) {
+		var response = service.searchUserById(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
@@ -100,7 +111,7 @@ public class AdminController {
 	@PutMapping(value = "/update/{user}", 
 			consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AdminUserResponse> updateAnUser(
+	public ResponseEntity<UserAdminResponse> updateAnUser(
 			@PathVariable("user") String identifier,
 			@RequestBody UpdateAccountRequest request
 			) {
@@ -109,7 +120,7 @@ public class AdminController {
 	}
 	
 	@PutMapping(value = "/update/admin")
-	public ResponseEntity<AdminUserResponse> updateUserAdmin(
+	public ResponseEntity<UserAdminResponse> updateUserAdmin(
 			@RequestBody UpdateAccountRequest request
 			) {
 		var response = service.updateUserAdmin(request);
@@ -126,7 +137,7 @@ public class AdminController {
 	
 	@PostMapping(value = "/ban/{user}", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AdminUserResponse> banUser(
+	public ResponseEntity<UserAdminResponse> banUser(
 			@PathVariable("user") String identifier
 			) {
 		var response = service.banUser(identifier);
@@ -135,7 +146,7 @@ public class AdminController {
 	
 	@PostMapping(value = "/unban/{user}", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AdminUserResponse> unbanUser(
+	public ResponseEntity<UserAdminResponse> unbanUser(
 			@PathVariable("user") String identifier
 			) {
 		var response = service.unbanUser(identifier);
